@@ -26,16 +26,11 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: Download artifacts
+      - name: Download all artifacts
         uses: actions/download-artifact@v4
         with:
-          name: wheels
           path: dist
-      - name: Download sdist
-        uses: actions/download-artifact@v4
-        with:
-          name: sdist
-          path: dist
+          merge-multiple: true
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
