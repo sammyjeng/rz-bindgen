@@ -20,40 +20,23 @@ jobs:
     with:
       rizin_ref: ${{ needs.extract-rizin-version.outputs.rizin_version }}
 
-  create-release:
+  publish-pypi:
     runs-on: ubuntu-24.04
     needs: [build]
-    permissions:
-      contents: write
     steps:
-      - name: Download all artifacts
+      - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
+          name: wheels-ubuntu-24.04
           path: dist
-          merge-multiple: true
-      - name: Create Release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: dist/*
-          generate_release_notes: true
-          draft: false
-          prerelease: false
 
-  # publish-pypi:
-  #   runs-on: ubuntu-24.04
-  #   needs: [build]
-  #   steps:
-  #     - name: Download artifacts
-  #       uses: actions/download-artifact@v4
-  #       with:
-  #         name: wheels
-  #         path: dist
-  #     - name: Download sdist
-  #       uses: actions/download-artifact@v4
-  #       with:
-  #         name: sdist
-  #         path: dist
-  #     - name: Publish wheels
-  #       uses: pypa/gh-action-pypi-publish@v1.5.1
-  #       with:
-  #         password: ${{ secrets.PYPI_TOKEN }}
+      - name: Download sdist
+        uses: actions/download-artifact@v4
+        with:
+          name: sdist-ubuntu-24.04
+          path: dist
+
+      - name: Publish wheels
+        uses: pypa/gh-action-pypi-publish@v1.10.3
+        with:
+          password: ${{ secrets.PYPI_TOKEN }}
